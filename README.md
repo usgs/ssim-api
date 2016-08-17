@@ -15,8 +15,7 @@ SETUP
 
 3. Install package
     - install requirements: pip install pandas==0.18.0
-    - download and unzip git file: https://gitlab.cr.usgs.gov/wgeogdev/ssim_api/repository/archive.zip?ref=master
-	- python setup.py install
+    - install ssim_api with pip: pip install git+https://github.com/usgs/ssim-api.git@v0.0.2
     
 ABOUT THE CODE
 ==============
