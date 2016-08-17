@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.5.1 virtualenv at G:\2016_Working\jts_2016_03_29_CDI_Project\API\venv" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="jts_2016_06_07_Python_return_run_control" />
+<<<<<<< HEAD
+    <orderEntry type="module" module-name="2016_Temp" />
+=======
+>>>>>>> aab518b5ca5d7be6656057570fc0f3b9ab18917d
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="Unittests" />
+  </component>
+</module>
