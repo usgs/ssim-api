@@ -136,7 +136,7 @@ def db_query_stock(sqlite_connection, project_id=None, scenario_id=None, iterati
     if stateclass:
         query_sql, all_params = update_query_string(all_params, query_sql, "STSim_StateClass.Name", stateclass, "stateclass")
     if stock_type:
-        query_sql, all_params = update_query_string(all_params, query_sql, "SF_StockType.Name", stateclass, "stateclass")
+        query_sql, all_params = update_query_string(all_params, query_sql, "SF_StockType.Name", stock_type, "stock_type")
 
     df = apply_query(sqlite_connection, query_sql, all_params)
     raise_error_empty_df(df)
