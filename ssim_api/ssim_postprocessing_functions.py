@@ -39,7 +39,11 @@ def calculate_percentile(df, percentile, values_column):
     col_headings = df.columns
     remove_headings = [percentile[0], values_column]
     col_headings = [x for x in col_headings if x not in remove_headings]
-    df = df.groupby(col_headings, as_index=False)[values_column].quantile([percentile[1], 0.5, percentile[2]]).reset_index()
+    #df = df.groupby(col_headings, as_index=False)[values_column].quantile([percentile[1], 0.5, percentile[2]]).reset_index()
+    df = df.groupby(col_headings)[values_column].quantile([percentile[1], 0.5, percentile[2]]).reset_index()
+    df = df.pivot_table(values=0,index=col_headings,columns='level_7')
+    df.reset_index(inplace=True)
+    df.columns.name = None
     df.columns = col_headings + ['Min', 'Mean', 'Max']
     return df
 
