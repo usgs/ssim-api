@@ -14,7 +14,7 @@ SETUP
     - activate virtual environment: \path\to\virtualenv name\Scripts\activate  
 
 3. Install package
-    - install requirements: pip install pandas==0.18.0
+    - install requirements: pip install pandas==0.18.1
     - install ssim_api with pip: pip install git+https://github.com/usgs/ssim-api.git@v0.0.2
     
 ABOUT THE CODE

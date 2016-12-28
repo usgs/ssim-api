@@ -8,7 +8,30 @@
 # **********************************************************
 import sqlite3, sys, os.path
 import pandas as pd
-from ssim_api.all_dictionaries import query_dictionary
+import numpy as np
+from ssim_api.all_dictionaries import query_dictionary, select_dic
+
+class pc:
+    """
+    percentile aggregate class
+    """
+    def __init__(self):
+        self.s = []
+        self.pval = 0
+
+    def step(self, value, percent_val):
+
+        self.s.append(value)
+        self.pval=percent_val
+
+    def finalize(self):
+        if len(self.s)==0:
+            return None
+        else:
+            a = np.array(self.s)
+            p = np.percentile(a, self.pval)
+            return p
+
 
 def apply_query(sqlite_connection, query_sql, all_params=None):
     # Creates connected to the database, executes query, and returns pandas dataframe with results
@@ -21,6 +44,7 @@ def apply_query(sqlite_connection, query_sql, all_params=None):
     #   sql statement with either WHERE or AND appended to the end
     #
     conn = sqlite3.connect(sqlite_connection)
+    conn.create_aggregate("pc", 2, pc)
     c = conn.cursor()
     if len(all_params) > 0:
         c.execute(query_sql, all_params)
@@ -81,6 +105,46 @@ def update_query_string(all_params, query_sql, query_column, variable, variable_
 
     return query_sql, all_params
 
+
+def update_group_by_query(query_sql, selection_params, group_by, variable_name):
+    # Appends WHERE or AND to Sql statement depending on whether parameter is the first parameter in the WHERE statement
+    #
+    # Args:
+    #   all_params: list of all parameters that will be queried with WHERE statement
+    #   squery_sql: current sql statement
+    #
+    # Returns:
+    #   sql statement with either WHERE or AND appended to the end
+    #
+    raise_type_error(group_by, variable_name=variable_name)
+
+    query_sql += " GROUP BY " + ", ".join(group_by)
+
+    for header in selection_params.keys():
+        if header not in group_by:
+            del selection_params[header]
+
+    query_select = "SELECT " + ", ".join(selection_params.values()) + ", SUM(Amount) AS sum"
+
+    return query_sql, query_select, selection_params
+
+def update_percentile_query(query_sql, selection_params, query_select, percentile, variable_name):
+    # Appends WHERE or AND to Sql statement depending on whether parameter is the first parameter in the WHERE statement
+    #
+    # Args:
+    #   all_params: list of all parameters that will be queried with WHERE statement
+    #   squery_sql: current sql statement
+    #
+    # Returns:
+    #   sql statement with either WHERE or AND appended to the end
+    #
+    raise_type_error(percentile, variable_name=variable_name)
+
+    del selection_params[percentile[0]]
+    query_sql += ") GROUP BY " + ", ".join(selection_params.keys())
+    query_select = "select " + ", ".join(selection_params.keys()) + ", pc(sum, %d), pc(sum, 50), pc(sum, %d) from (" % (100-percentile[1], percentile[1]) + query_select
+
+    return query_sql, query_select
 
 
 # **********************************************************

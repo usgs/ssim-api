@@ -7,15 +7,12 @@
 # **********************************************************
 
 import sqlite3, sys, os.path
-import pandas as pd
-from ssim_api.all_dictionaries import query_dictionary
 from ssim_api.ssim_general_functions import *
 
 # **********************************************************
 # Query database functions
 # **********************************************************
-
-def db_query_stateclass(sqlite_connection, project_id=None, scenario_id=None, iteration=None, timestep=None, stratum=None, secondary_stratum=None, state_label_x=None, state_label_y=None):
+def db_query_stateclass(sqlite_connection, project_id=None, scenario_id=None, iteration=None, timestep=None, stratum=None, secondary_stratum=None, state_label_x=None, state_label_y=None, group_by=None, percentile=None):
     # Function for querying the STSim_OutputStratumState table in the database
     #
     # Args:
@@ -32,8 +29,11 @@ def db_query_stateclass(sqlite_connection, project_id=None, scenario_id=None, it
     #   Dataframe with the results of the query
     #
     try:
-        query_name = "OutputStratumState_query"
-        query_sql = query_dictionary[query_name]
+        #query_select = query_dictionary["OutputStratumState_query_select"]
+        query_from = query_dictionary["OutputStratumState_query_from"]
+        selection_params = select_dic["OutputStratumState_select_dic"]
+        query_select = "SELECT " + ", ".join(selection_params.values())
+        query_sql = ""
         all_params = ()
         if project_id:
             query_sql, all_params = update_query_string(all_params, query_sql, "SSim_Scenario.ProjectID", project_id, "project_id")
@@ -51,7 +51,15 @@ def db_query_stateclass(sqlite_connection, project_id=None, scenario_id=None, it
             query_sql, all_params = update_query_string(all_params, query_sql, "STSim_StateLabelX.Name", state_label_x, "state_label_x")
         if state_label_y:
             query_sql, all_params = update_query_string(all_params, query_sql, "STSim_StateLabelY.Name", state_label_y, "state_label_y")
+        if group_by:
+            query_sql, query_select, selection_params = update_group_by_query(query_sql, selection_params, group_by, "group_by")
+        if percentile:
+            query_sql, query_select = update_percentile_query(query_sql, selection_params, query_select, percentile, "percentile")
 
+        query_sql = query_select + query_from + query_sql
+
+        print(query_sql)
+        print(all_params)
         df = apply_query(sqlite_connection, query_sql, all_params)
         raise_error_empty_df(df)
         return df
@@ -60,7 +68,7 @@ def db_query_stateclass(sqlite_connection, project_id=None, scenario_id=None, it
         print("Error:", explanation)
 
 
-def db_query_transitiongroup(sqlite_connection, project_id=None, scenario_id=None, iteration=None, timestep=None, stratum=None, secondary_stratum=None, transition_group=None):
+def db_query_transitiongroup(sqlite_connection, project_id=None, scenario_id=None, iteration=None, timestep=None, stratum=None, secondary_stratum=None, transition_group=None, group_by=None, percentile=None):
     # Function for querying the STSim_OutputStratumState table in the database
     #
     # Args:
@@ -77,8 +85,10 @@ def db_query_transitiongroup(sqlite_connection, project_id=None, scenario_id=Non
     #   Dataframe with the results of the query
     #
     try:
-        query_name = "OutputStratumTransition_query"
-        query_sql = query_dictionary[query_name]
+        query_from = query_dictionary["OutputStratumTransition_query_from"]
+        selection_params = select_dic["OutputStratumTransition_select_dic"]
+        query_select = "SELECT " + ", ".join(selection_params.values())
+        query_sql = ""
         all_params = ()
         if project_id:
             query_sql, all_params = update_query_string(all_params, query_sql, "SSim_Scenario.ProjectID", project_id, "project_id")
@@ -94,6 +104,12 @@ def db_query_transitiongroup(sqlite_connection, project_id=None, scenario_id=Non
             query_sql, all_params = update_query_string(all_params, query_sql, "STSim_SecondaryStratum.Name", secondary_stratum, "secondary_stratum")
         if transition_group:
             query_sql, all_params = update_query_string(all_params, query_sql, "STSim_TransitionGroup.Name", transition_group, "transition_group")
+        if group_by:
+            query_sql, query_select, selection_params = update_group_by_query(query_sql, selection_params, group_by, "group_by")
+        if percentile:
+            query_sql, query_select = update_percentile_query(query_sql, selection_params, query_select, percentile, "percentile")
+
+        query_sql = query_select + query_from + query_sql
 
         df = apply_query(sqlite_connection, query_sql, all_params)
         raise_error_empty_df(df)
@@ -102,7 +118,7 @@ def db_query_transitiongroup(sqlite_connection, project_id=None, scenario_id=Non
     except Exception as explanation:
         print("Error:", explanation)
 
-def db_query_stock(sqlite_connection, project_id=None, scenario_id=None, iteration=None, timestep=None, stratum=None, secondary_stratum=None, stateclass=None, stock_type=None):
+def db_query_stock(sqlite_connection, project_id=None, scenario_id=None, iteration=None, timestep=None, stratum=None, secondary_stratum=None, stateclass=None, stock_type=None, group_by=None, percentile=None):
     # Function for querying the STSim_OutputStratumState table in the database
     #
     # Args:
@@ -118,8 +134,10 @@ def db_query_stock(sqlite_connection, project_id=None, scenario_id=None, iterati
     # Returns:
     #   Dataframe with the results of the query
     #
-    query_name = "OutputStock_query"
-    query_sql = query_dictionary[query_name]
+    query_from = query_dictionary["OutputStock_query_from"]
+    selection_params = select_dic["OutputStock_query_select_dic"]
+    query_select = "SELECT " + ", ".join(selection_params.values())
+    query_sql = ""
     all_params = ()
     if project_id:
         query_sql, all_params = update_query_string(all_params, query_sql, "SSim_Scenario.ProjectID", project_id, "project_id")
@@ -137,6 +155,12 @@ def db_query_stock(sqlite_connection, project_id=None, scenario_id=None, iterati
         query_sql, all_params = update_query_string(all_params, query_sql, "STSim_StateClass.Name", stateclass, "stateclass")
     if stock_type:
         query_sql, all_params = update_query_string(all_params, query_sql, "SF_StockType.Name", stock_type, "stock_type")
+    if group_by:
+        query_sql, query_select, selection_params = update_group_by_query(query_sql, selection_params, group_by, "group_by")
+    if percentile:
+        query_sql, query_select = update_percentile_query(query_sql, selection_params, query_select, percentile, "percentile")
+
+    query_sql = query_select + query_from + query_sql
 
     df = apply_query(sqlite_connection, query_sql, all_params)
     raise_error_empty_df(df)

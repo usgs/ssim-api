@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://G:/2016_Temp/.idea/2016_Temp.iml" filepath="G:/2016_Temp/.idea/2016_Temp.iml" />
-=======
->>>>>>> aab518b5ca5d7be6656057570fc0f3b9ab18917d
-      <module fileurl="file://$PROJECT_DIR$/../../../jts_2016_06_07_Python_return_run_control/.idea/jts_2016_06_07_Python_return_run_control.iml" filepath="$PROJECT_DIR$/../../../jts_2016_06_07_Python_return_run_control/.idea/jts_2016_06_07_Python_return_run_control.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/pythonscripts.iml" filepath="$PROJECT_DIR$/.idea/pythonscripts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ssim-api.iml" filepath="$PROJECT_DIR$/.idea/ssim-api.iml" />
     </modules>
   </component>
 </project>

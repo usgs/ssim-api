@@ -10,7 +10,7 @@ sqlite_file = r"/path/to/db.ssim"
 
 # define query vals
 project_id = (7096,)
-scenario_id = (6368, 6370)
+scenario_id = (6370)
 
 # run project_summary()
 # Returns:
@@ -23,7 +23,7 @@ scenario_id = (6368, 6370)
     #        ls[5] = strata
     #        ls[6] = secondary_strata
 
-ProjectSummary = project_summary(sqlite_file, project=project_id)
+#ProjectSummary = project_summary(sqlite_file, project=project_id)
 print("Project summary query finished")
 
 # run query_projects()
