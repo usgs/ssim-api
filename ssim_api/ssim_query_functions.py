@@ -6,9 +6,8 @@
 # Setup
 # **********************************************************
 
-import sqlite3, sys, os.path
 from ssim_api.ssim_general_functions import *
-
+import copy
 # **********************************************************
 # Query database functions
 # **********************************************************
@@ -29,9 +28,8 @@ def db_query_stateclass(sqlite_connection, project_id=None, scenario_id=None, it
     #   Dataframe with the results of the query
     #
     try:
-        #query_select = query_dictionary["OutputStratumState_query_select"]
         query_from = query_dictionary["OutputStratumState_query_from"]
-        selection_params = select_dic["OutputStratumState_select_dic"]
+        selection_params = copy.copy(select_dic["OutputStratumState_select_dic"])
         query_select = "SELECT " + ", ".join(selection_params.values())
         query_sql = ""
         all_params = ()
@@ -86,7 +84,7 @@ def db_query_transitiongroup(sqlite_connection, project_id=None, scenario_id=Non
     #
     try:
         query_from = query_dictionary["OutputStratumTransition_query_from"]
-        selection_params = select_dic["OutputStratumTransition_select_dic"]
+        selection_params = copy.copy(select_dic["OutputStratumTransition_select_dic"])
         query_select = "SELECT " + ", ".join(selection_params.values())
         query_sql = ""
         all_params = ()
@@ -135,7 +133,7 @@ def db_query_stock(sqlite_connection, project_id=None, scenario_id=None, iterati
     #   Dataframe with the results of the query
     #
     query_from = query_dictionary["OutputStock_query_from"]
-    selection_params = select_dic["OutputStock_query_select_dic"]
+    selection_params = copy.copy(select_dic["OutputStock_query_select_dic"])
     query_select = "SELECT " + ", ".join(selection_params.values())
     query_sql = ""
     all_params = ()
