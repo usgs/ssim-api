@@ -334,6 +334,6 @@ def project_summary(sqlite_connection, project=None):
         secondary_strata = db_query_general(sqlite_connection, 'SecondaryStrata',  project_id=project, table_name_project='STSim_SecondaryStratum', scenario_id=None, table_name_scenario=None)
     else:
         secondary_strata = []
+    stateclass = db_query_general(sqlite_connection, 'StateClass', project_id=project, table_name_project='STSim_StateClass', scenario_id=None, table_name_scenario=None)
 
-
-    return scenarios, state_labels_x, state_labels_y, transition_groups, stock_types, strata, secondary_strata
+    return scenarios, state_labels_x, state_labels_y, transition_groups, stock_types, strata, secondary_strata, stateclass

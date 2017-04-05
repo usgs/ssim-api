@@ -11,6 +11,7 @@ query_dictionary = {
 'Scenario_Names_All': '''SELECT Name, ScenarioID FROM SSim_Scenario''',
 'StateLabelX': '''SELECT StateLabelXID, Name, Description FROM STSim_StateLabelX''',
 'StateLabelY': '''SELECT StateLabelYID, Name, Description FROM STSim_StateLabelY''',
+'StateClass': '''SELECT StateClassID, Name, Description FROM STSim_StateClass''',
 'TransitionGroups': '''SELECT TransitionGroupID, Name, Description FROM STSim_TransitionGroup''',
 'StockTypes': '''SELECT StockTypeID, Name, Description FROM SF_StockType''',
 'TableExists': '''SELECT Name FROM sqlite_master WHERE type = "table" AND name = ?''',

@@ -15,7 +15,7 @@ def table_exists(name=None, con=None):
     exists = True if len(df)>0 else False
     return exists
 
-def write_frame(frame, name=None, con=None, if_exists='fail'):
+def write_frame(frame, name=None, con=None, if_exists='append'):
     """
     Write records stored in a DataFrame to specified dbms.
 
@@ -27,7 +27,7 @@ def write_frame(frame, name=None, con=None, if_exists='fail'):
         if table already exists.  Add: if_exists=('replace','append','fail')
     """
 
-    if if_exists=='replace' and table_exists(name, con):
+    """if if_exists=='replace' and table_exists(name, con):
         cur = con.cursor()
         cur.execute("drop table "+name)
         cur.close()
@@ -39,11 +39,12 @@ def write_frame(frame, name=None, con=None, if_exists='fail'):
         cur = con.cursor()
         cur.execute(schema)
         cur.close()
-        print('created table')
+        print('created table')"""
 
 
     #bulk insert
     wildcards = ','.join(['?'] * len(frame.columns))
+    print(name)
     insert_sql = 'INSERT INTO %s VALUES (%s)' % (name, wildcards)
     #print 'insert_sql', insert_sql
     data = [tuple(x) for x in frame.values]
