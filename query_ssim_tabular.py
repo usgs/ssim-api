@@ -12,8 +12,8 @@ import sqlite3
 # Hawaii LandCarbon Assessment.ssim
 # **********************************************************
 # path to .ssim database
-#sqlite_file = r"/path/to/db.ssim"
-sqlite_file=r"/path/to/.ssim"
+sqlite_file = r"/path/to/db.ssim"
+
 #csvout
 csv_out = r"/path/to/fileout.csv"
 
@@ -24,7 +24,7 @@ state_label_x = ("Forest","")
 stratum = ("Dry",)
 secondary_stratum = ("Hawai'i",)
 timestep =(2015,)
-group_by=("Timestep","Iteration","StockType")
+group_by=("Timestep","Iteration")
 # start timer
 start = time.time()
 percentile = ("Iteration", 95)
@@ -34,7 +34,7 @@ transition_group = ("test")
 # run  db_query_stateclass()
 # returns:
     # dataframe with stateclass query results
-StateClassOutput = db_query_stateclass(sqlite_file, project_id=project_id, scenario_id = scenario_id, state_label_x=None, stratum=stratum, secondary_stratum=None, group_by=group_by, percentile=None)
+StateClassOutput = db_query_stateclass(sqlite_file, project_id=project_id, scenario_id = scenario_id, state_label_x=None, stratum=stratum, secondary_stratum=None, group_by=None, percentile=None)
 print("Stateclass query finished")
 
 # run  db_query_transitiongroup(()

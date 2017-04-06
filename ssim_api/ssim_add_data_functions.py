@@ -1,6 +1,6 @@
 from ssim_api.ssim_general_functions import *
 from ssim_api.ssim_query_functions import project_summary
-from ssim_build_table_functions import *
+from ssim_api.ssim_build_table_functions import *
 import sys
 
 def add_scenario(in_csv, output_table, sqlite_connection, scenario_id=None):
@@ -13,7 +13,7 @@ def add_scenario(in_csv, output_table, sqlite_connection, scenario_id=None):
     # Returns:
     #   builds table specified
 
-    df = pd.read_csv(r"F:\2016_Working\jts_2016_09_01_LandCarbon_CDI\ssim_api_external_update\stateclass.csv")
+    df = pd.read_csv(in_csv)
 
     #scenario_list = list(project_summary(sqlite_connection)[0]['scenario_id'])
     if scenario_id==None:
@@ -24,31 +24,27 @@ def add_scenario(in_csv, output_table, sqlite_connection, scenario_id=None):
     strata_lookup = summary_data[5].set_index('Name').to_dict()
     secondary_strata_lookup = summary_data[6].set_index('Name').to_dict()
     state_labels_x_lookup = summary_data[1].set_index('Name').to_dict()
+    state_labels_y_lookup = summary_data[2].set_index('Name').to_dict()
     stateclass_lookup = summary_data[7].set_index('Name').to_dict()
-
-    #strata_lookup = dict([(str(k), v) for k, v in strata_lookup["StratumID"].items()])
-
-
+    print(state_labels_y_lookup)
     df = df.replace({"StratumID": strata_lookup["StratumID"]})
-
     df = df.replace({"SecondaryStratumID": secondary_strata_lookup["SecondaryStratumID"]})
-
     df = df.replace({"StateClassID": stateclass_lookup["StateClassID"]})
     df = df.replace({"StateLabelXID": state_labels_x_lookup["StateLabelXID"]})
-    print(scenario_id)
-    #df.insert(0, 'ScenarioID', scenario_id)
+    df = df.replace({"StateLabelYID": state_labels_y_lookup["StateLabelYID"]})
 
-    df['ScenarioID'] = scenario_id
-    print(df)
-    operation = 'append'
+    df.insert(0, 'ScenarioID', scenario_id)
 
-
-    df_to_db(sqlite_connection, output_table, df, operation)
+    df_to_db(sqlite_connection, output_table, df)
 
     del df
 
-def remove_scenario(scenario):
-    scenario
+def remove_scenario(sqlite_file, table, scenario):
+    sql = 'DELETE FROM %s WHERE ScenarioID = %s;' % (table, str(scenario))
+    conn = sqlite3.connect(sqlite_file)
+    conn.execute(sql)
+    conn.commit()
+    print("scenario %s removed from %s" % (str(scenario), table))
 
 def index_exists(sqlite_file, table):
     conn = sqlite3.connect(sqlite_file)
@@ -69,19 +65,20 @@ def index_table(table, sqlite_file):
     names.remove("Amount")
     names = tuple(names)
 
-    print(names)
     index_name = table+"_Index"
     print(index_name)
 
     if index_exists(sqlite_file, table):
+        print("delete index")
         conn = sqlite3.connect(sqlite_file)
         c = conn.cursor()
         c.execute('DROP INDEX {ix}'.format(ix=index_name))
-    else:
-        conn = sqlite3.connect(sqlite_file)
-        c = conn.cursor()
-        c.execute('CREATE INDEX {ix} ON {tn}{cn}' \
-                  .format(ix=index_name, tn=table, cn=names))
 
+
+    conn = sqlite3.connect(sqlite_file)
+    c = conn.cursor()
+    c.execute('CREATE INDEX {ix} ON {tn}{cn}' \
+              .format(ix=index_name, tn=table, cn=names))
+    print("table indexed")
     conn.commit()
     conn.close()
