@@ -28,3 +28,15 @@ select_dic = {
 "OutputStratumTransition_select_dic":{'IDProject': 'SSim_Scenario.ProjectID AS IDProject', 'IDScenario':'STSim_OutputStratumTransition.ScenarioID AS IDScenario', 'Iteration': 'STSim_OutputStratumTransition.Iteration AS Iteration', 'Timestep': 'STSim_OutputStratumTransition.Timestep AS Timestep', 'Stratum': 'STSim_Stratum.Name AS Stratum', 'SecondaryStratum': 'STSim_SecondaryStratum.Name AS SecondaryStratum', 'TransitionGroup': 'STSim_TransitionGroup.Name AS TransitionGroup', 'AgeMin': 'STSim_OutputStratumTransition.AgeMin AS AgeMin', 'AgeMax': 'STSim_OutputStratumTransition.AgeMax AS AgeMax', 'Amount':  'STSim_OutputStratumTransition.Amount AS Amount'},
 "OutputStock_query_select_dic": {'IDProject': 'SSim_Scenario.ProjectID AS IDProject', 'IDScenario': 'SF_OutputStock.ScenarioID AS IDScenario', 'Iteration': 'SF_OutputStock.Iteration AS Iteration', 'Timestep':'SF_OutputStock.Timestep AS Timestep', 'Stratum': 'STSim_Stratum.Name AS Stratum', 'SecondaryStratum': 'STSim_SecondaryStratum.Name AS SecondaryStratum', 'StateClass': 'STSim_StateClass.Name AS StateClass', 'StockType':'SF_StockType.Name AS StockType', 'Amount': 'SF_OutputStock.Amount AS Amount'},
 }
+
+table_name_dic = {
+"stateclass": "STSim_OutputStratumState",
+"transition": "STSim_OutputStratumTransition",
+"stock": "SF_OutputStock"
+}
+
+table_insert_dic = {
+"STSim_OutputStratumState": 'INSERT INTO %s (ScenarioID, Iteration, Timestep, StratumID, SecondaryStratumID, StateClassID, StateLabelXID, StateLabelYID, AgeMin, AgeMax, AgeClass, Amount) VALUES (%s)',
+"STSim_OutputStratumTransition": 'INSERT INTO %s (ScenarioID, Iteration, Timestep, StratumID, SecondaryStratumID, TransitionGroupID, AgeMin, AgeMax, AgeClass, Amount) VALUES (%s)',
+"SF_OutputStock": 'INSERT INTO %s (ScenarioID, Iteration, Timestep, StratumID, SecondaryStratumID, StateClassID, StockTypeID, Amount) VALUES (%s)'
+}
