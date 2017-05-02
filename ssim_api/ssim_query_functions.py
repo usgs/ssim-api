@@ -325,16 +325,16 @@ def project_summary(sqlite_connection, project=None):
     state_labels_x = db_query_general(sqlite_connection, 'StateLabelX',  project_id=project, table_name_project='STSim_StateLabelX', scenario_id=None, table_name_scenario=None)
     state_labels_y = db_query_general(sqlite_connection, 'StateLabelY',  project_id=project, table_name_project='STSim_StateLabelY', scenario_id=None, table_name_scenario=None)
     transition_groups = db_query_general(sqlite_connection, 'TransitionGroups',  project_id=project, table_name_project='STSim_TransitionGroup', scenario_id=None, table_name_scenario=None)
-    if table_exists(sqlite_connection, 'SF_StockType'):
-        stock_types = db_query_general(sqlite_connection, 'StockTypes',  project_id=project, table_name_project='SF_StockType', scenario_id=None, table_name_scenario=None)
-    else:
-        stock_types = []
     strata = db_query_general(sqlite_connection, 'Strata',  project_id=project, table_name_project='STSim_Stratum', scenario_id=None, table_name_scenario=None)
     if table_exists(sqlite_connection, 'STSim_SecondaryStratum'):
         secondary_strata = db_query_general(sqlite_connection, 'SecondaryStrata',  project_id=project, table_name_project='STSim_SecondaryStratum', scenario_id=None, table_name_scenario=None)
     else:
         secondary_strata = []
+    if table_exists(sqlite_connection, 'SF_StockType'):
+        stock_types = db_query_general(sqlite_connection, 'StockTypes',  project_id=project, table_name_project='SF_StockType', scenario_id=None, table_name_scenario=None)
+    else:
+        stock_types = []
     stateclass = db_query_general(sqlite_connection, 'StateClass', project_id=project, table_name_project='STSim_StateClass', scenario_id=None, table_name_scenario=None)
-    stock_type = db_query_general(sqlite_connection, 'StockTypes', project_id=project, table_name_project='SF_StockType', scenario_id=None, table_name_scenario=None)
+    
 
-    return scenarios, state_labels_x, state_labels_y, transition_groups, stock_types, strata, secondary_strata, stateclass, stock_type
+    return scenarios, state_labels_x, state_labels_y, transition_groups, stock_types, strata, secondary_strata, stateclass
