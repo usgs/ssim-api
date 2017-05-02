@@ -335,7 +335,7 @@ def project_summary(sqlite_connection, project=None):
             stock_types = db_query_general(sqlite_connection, 'StockTypes',  project_id=project, table_name_project='SF_StockType', scenario_id=None, table_name_scenario=None)
         except Exception: 
             stock_types=[]
-            continue
+            pass
     else:
         stock_types = []
     stateclass = db_query_general(sqlite_connection, 'StateClass', project_id=project, table_name_project='STSim_StateClass', scenario_id=None, table_name_scenario=None)
